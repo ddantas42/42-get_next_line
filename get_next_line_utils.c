@@ -12,18 +12,6 @@
 
 #include "get_next_line.h"
 
-size_t	ft_strlen(char *s)
-{
-	int	n;
-
-	n = 0;
-	if (!s)
-		return (0);
-	while (s[n] != '\0')
-		n++;
-	return (n);
-}
-
 int	check_lines(char *string)
 {
 	char	*str;
@@ -39,6 +27,18 @@ int	check_lines(char *string)
 			return (0);
 	}
 	return (1);
+}
+
+size_t	ft_strlen(char *s)
+{
+	int	n;
+
+	n = 0;
+	if (!s)
+		return (0);
+	while (s[n] != '\0')
+		n++;
+	return (n);
 }
 
 char	*ft_strjoin(char *str, char *line)
@@ -60,7 +60,7 @@ char	*ft_strjoin(char *str, char *line)
 	while (str[++i] != '\0')
 		join[n++] = str[i];
 	join[n] = '\0';
-	return (join);
+	return(join);
 }
 
 char	*clean_str(char str[BUFFER_SIZE + 1])

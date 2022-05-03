@@ -14,7 +14,7 @@
 
 char	*all_string(int fd, char *line)
 {
-	ssize_t	read_size;
+	ssize_t read_size;
 	char	str[BUFFER_SIZE + 1];
 	int		n;
 
@@ -25,7 +25,7 @@ char	*all_string(int fd, char *line)
 		read_size = read(fd, str, BUFFER_SIZE);
 		str[BUFFER_SIZE] = '\0';
 		n++;
-		if (read_size == 0 && str[BUFFER_SIZE - 1] == '\0')
+		if (read_size == 0)
 		{
 			line = ft_strjoin(str, line);
 			break ;
@@ -52,7 +52,7 @@ char	*string_temp(char *line)
 	temp = malloc(((ft_strlen(line) - n + 1) * sizeof(char)));
 	if (!temp)
 		return (NULL);
-	while (line[++n])
+	while (line[++n] != '\0')
 		temp[i++] = line[n];
 	temp[i] = '\0';
 	return (temp);
@@ -72,27 +72,33 @@ char	*line_fix(char *line)
 	}
 	line_fix = malloc((n + 1) * sizeof(char));
 	if (!line_fix)
+	{
+		free(line_fix);
 		return (NULL);
+	}
 	i = -1;
 	while (++i < n + 1)
 		line_fix[i] = line[i];
 	line_fix[++i] = '\0';
 	return (line_fix);
-}
+}	
 
 char	*get_next_line(int fd)
 {
 	char		*line;
-	static char	*temp = "";
+	static char	*temp;
 
-	if (fd >= 1000 || fd <= 2 || BUFFER_SIZE <= 0)
+	if (BUFFER_SIZE <= 0  || fd < 0 || fd > 1024)
 		return (NULL);
-	line = temp;	
+	temp = read(fd, temp, BUFFER_SIZE);
+	line = temp;
 	line = all_string(fd, line);
 	if (line[0] == 0)
+	{
+		free(line);
 		return (NULL);
+	}
 	temp = string_temp(line);
-	if (BUFFER_SIZE != 1)
-		line = line_fix(line);
+	line = line_fix(line);
 	return (line);
 }

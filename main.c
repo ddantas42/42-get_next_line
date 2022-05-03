@@ -19,7 +19,7 @@
 #include <stdio.h>
 
 
-#define BUFFER_SIZE 1
+#define BUFFER_SIZE 997767
 
 int	check_lines(char *string)
 {
@@ -94,7 +94,7 @@ char	*all_string(int fd, char *line)
 	read_size = 1;
 	while (check_lines(line) == 1)
 	{
-		read_size = read(fd, str, BUFFER_SIZE);		printf("\nRead_size = '%zd'\n", read_size);
+		read_size = read(fd, str, BUFFER_SIZE);	//	printf("\nRead_size = '%zd'\n", read_size);
 		str[BUFFER_SIZE] = '\0';
 		n++;
 		if (read_size == 0)
@@ -164,7 +164,7 @@ char	*get_next_line(int fd)
 	static char	*temp = "";
 
 	printf("Começa get_next_line\n"); printf("String temp inicial = '%s'\n", temp);
-	if (fd >= 1000 || fd <= 2 || BUFFER_SIZE <= 0)
+	if (fd >= 1000 || fd <= 0 || BUFFER_SIZE <= 0)
 		return (NULL);
 	line = temp;
 	line = all_string(fd, line);
@@ -205,11 +205,10 @@ int	main(void)
 	int		fd = open("texto.txt", O_RDONLY);
 	int		n = 0;
 	int		ler = 7;
-	int		line = 0;
 
 	while (n++ < ler)
 	{
-		printf("\nchamada = %d\n", ++line);
+		printf("\nchamada = %d\n", n);
 
 		str_line = malloc(30 * sizeof(char));
 		if (!str_line)
