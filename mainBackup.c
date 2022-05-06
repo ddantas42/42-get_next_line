@@ -19,7 +19,7 @@
 #include <stdio.h>
 
 
-#define BUFFER_SIZE 1000000
+#define BUFFER_SIZE 1212
 
 int	check_lines(char *string)
 {
@@ -72,25 +72,6 @@ char	*ft_strjoin(char *str, char *line)
 	return(join);
 }
 
-char	*ft_substr(char const *s, unsigned int start, size_t len)
-{
-	char		*str;
-	size_t		n;
-
-	if (!s)
-		return (0);
-	if (len > ft_strlen(((char *)s)))
-		len = ft_strlen((char *)s) + 1;
-	str = malloc((len + 1) * sizeof(char));
-	if (!str)
-		return (0);
-	n = 0;
-	while (n < len && start < ft_strlen((char *)s))
-		str[n++] = s[start++];
-	str[n] = '\0';
-	return (str);
-}
-
 char	*clean_str(char str[BUFFER_SIZE + 1])
 {
 	int	n;
@@ -107,16 +88,13 @@ char	*all_string(int fd, char *line)
 {
 	ssize_t read_size;
 	char	str[BUFFER_SIZE + 1];                   //    printf("Começa all_string\n");
-	int		n;
 
-	n = 0;
 	read_size = 1;
-	while (check_lines(line) == 1)
+	while (check_lines(line))
 	{
-		read_size = read(fd, str, BUFFER_SIZE);		//	printf("Read_size = '%zd'\n", read_size);
+		read_size = read(fd, str, BUFFER_SIZE);	//	printf("\nRead_size = '%zd'\n", read_size);
 		str[BUFFER_SIZE] = '\0';
-		n++;
-		if (read_size == 0 && str[BUFFER_SIZE - 1] == '\0')
+		if (read_size == 0)
 		{
 			line = ft_strjoin(str, line);
 			break ;
@@ -129,19 +107,9 @@ char	*all_string(int fd, char *line)
 	return (line);
 }
 
-int	check_if(int fd)
-{
-	if (!fd || fd <= 2 || fd >= 1025)
-		return (0);
-	if (BUFFER_SIZE <= 0)
-		return (0);
-	return (1);
-	
-}
-
 static char	*string_temp(char *line)
 {
-	char	*temp;
+	char	*temp_2;
 	int		n;
 	int		i;
 
@@ -151,18 +119,21 @@ static char	*string_temp(char *line)
 		if (line[n] == '\n')
 			break ;
 	}
-	i = 0;
-	temp = malloc(((ft_strlen(line) - n + 1) * sizeof(char)));
-	if (!temp)
+	temp_2 = malloc(((ft_strlen(line) - n + 1) * sizeof(char)));
+	if (!temp_2)
 		return (NULL);
-	while (line[++n])
-		temp[i++] = line[n];
-	temp[i] = '\0';
-	printf("String temp = '%s'\n", temp);
-	return (temp);
+	i = 0;
+	while (line[++n] != '\0')
+	{
+		printf("\ni = %d || line[%d] = '%c'\n", i, n, line[n]);
+		temp_2[i++] = line[n];
+	}	
+	temp_2[i] = '\0';
+	printf("String temp final = '%s'\n", temp_2);
+	return (temp_2);
 }
 
-char	*line_fix(char *line)
+char	*line_fix(char *line, char *temp)
 {
 	char	*line_fix;
 	int		n;
@@ -176,29 +147,38 @@ char	*line_fix(char *line)
 	}
 	line_fix = malloc((n + 1) * sizeof(char));
 	if (!line_fix)
+	{
+		free(temp);
+		free(line_fix);
 		return (NULL);
+	}
 	i = -1;
 	while (++i < n + 1)
 		line_fix[i] = line[i];
 	line_fix[++i] = '\0';
+	free(line);
 	return (line_fix);
 }	
 
 char	*get_next_line(int fd)
 {
-	char	*line;
+	char		*line;
 	static char	*temp = "";
 
-	printf("Começa get_next_line\n"); printf("String temp = '%s'\n", temp);
-	if (check_if(fd) == 0)
+	printf("Começa get_next_line\n"); printf("String temp inicial = '%s'\n", temp);
+	if (fd >= 1000 || fd <= 0 || BUFFER_SIZE <= 0)
 		return (NULL);
 	line = temp;
 	line = all_string(fd, line);
 	if (line[0] == 0)
+	{
+		free(line);
 		return (NULL);
+	}
 	temp = string_temp(line);
-	if (BUFFER_SIZE != 1)
-		line = line_fix(line);
+	if (BUFFER_SIZE != 1 && !temp)
+		return (NULL);
+	line = line_fix(line, temp);
 	return (line);
 }
 
@@ -229,11 +209,10 @@ int	main(void)
 	int		fd = open("texto.txt", O_RDONLY);
 	int		n = 0;
 	int		ler = 7;
-	int		line = 0;
 
 	while (n++ < ler)
 	{
-		printf("\nchamada = %d\n", ++line);
+		printf("\nchamada = %d\n", n);
 
 		str_line = malloc(30 * sizeof(char));
 		if (!str_line)

@@ -19,7 +19,7 @@
 #include <stdio.h>
 
 
-#define BUFFER_SIZE 997767
+#define BUFFER_SIZE 1
 
 int	check_lines(char *string)
 {
@@ -88,15 +88,12 @@ char	*all_string(int fd, char *line)
 {
 	ssize_t read_size;
 	char	str[BUFFER_SIZE + 1];                   //    printf("Começa all_string\n");
-	int		n;
 
-	n = 0;
 	read_size = 1;
-	while (check_lines(line) == 1)
+	while (check_lines(line))
 	{
 		read_size = read(fd, str, BUFFER_SIZE);	//	printf("\nRead_size = '%zd'\n", read_size);
 		str[BUFFER_SIZE] = '\0';
-		n++;
 		if (read_size == 0)
 		{
 			line = ft_strjoin(str, line);
@@ -112,7 +109,7 @@ char	*all_string(int fd, char *line)
 
 static char	*string_temp(char *line)
 {
-	char	*temp;
+	char	*temp_2;
 	int		n;
 	int		i;
 
@@ -122,18 +119,21 @@ static char	*string_temp(char *line)
 		if (line[n] == '\n')
 			break ;
 	}
-	i = 0;
-	temp = malloc(((ft_strlen(line) - n + 1) * sizeof(char)));
-	if (!temp)
+	temp_2 = malloc(((ft_strlen(line) - n + 1) * sizeof(char)));
+	if (!temp_2)
 		return (NULL);
+	i = 0;
 	while (line[++n] != '\0')
-		temp[i++] = line[n];
-	temp[i] = '\0';
-	printf("String temp final = '%s'\n", temp);
-	return (temp);
+	{
+		printf("\ni = %d || line[%d] = '%c'\n", i, n, line[n]);
+		temp_2[i++] = line[n];
+	}	
+	temp_2[i] = '\0';
+	printf("String temp final = '%s'\n", temp_2);
+	return (temp_2);
 }
 
-char	*line_fix(char *line)
+char	*line_fix(char *line, char *temp)
 {
 	char	*line_fix;
 	int		n;
@@ -148,6 +148,7 @@ char	*line_fix(char *line)
 	line_fix = malloc((n + 1) * sizeof(char));
 	if (!line_fix)
 	{
+		free(temp);
 		free(line_fix);
 		return (NULL);
 	}
@@ -155,6 +156,7 @@ char	*line_fix(char *line)
 	while (++i < n + 1)
 		line_fix[i] = line[i];
 	line_fix[++i] = '\0';
+	free(line);
 	return (line_fix);
 }	
 
@@ -174,7 +176,9 @@ char	*get_next_line(int fd)
 		return (NULL);
 	}
 	temp = string_temp(line);
-	line = line_fix(line);
+	if (BUFFER_SIZE != 1 && !temp)
+		return (NULL);
+	line = line_fix(line, temp);
 	return (line);
 }
 
