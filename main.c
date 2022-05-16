@@ -19,7 +19,7 @@
 #include <stdio.h>
 
 
-#define BUFFER_SIZE 1
+#define BUFFER_SIZE 5
 
 int	check_lines(char *string)
 {
@@ -56,6 +56,8 @@ char	*ft_strjoin(char *str, char *line)
 	int		n;
 	int		i;
 
+	if (!str || !line)
+		return (NULL);
 	join = malloc((ft_strlen(line) + ft_strlen(str) + 1) * sizeof(char));
 	if (!join)
 		return (NULL);
@@ -70,41 +72,6 @@ char	*ft_strjoin(char *str, char *line)
 		join[n++] = str[i];
 	join[n] = '\0';
 	return(join);
-}
-
-char	*clean_str(char str[BUFFER_SIZE + 1])
-{
-	int	n;
-
-	n = 0;
-	if (!str)
-		return (NULL);
-	while (str[n] != '\0')
-		str[n++] = '\0';
-	return (str);
-}
-
-char	*all_string(int fd, char *line)
-{
-	ssize_t read_size;
-	char	str[BUFFER_SIZE + 1];                   //    printf("Começa all_string\n");
-
-	read_size = 1;
-	while (check_lines(line))
-	{
-		read_size = read(fd, str, BUFFER_SIZE);	//	printf("\nRead_size = '%zd'\n", read_size);
-		str[BUFFER_SIZE] = '\0';
-		if (read_size == 0)
-		{
-			line = ft_strjoin(str, line);
-			break ;
-		}
-		line = ft_strjoin(str, line);
-		// printf("string = '%s'\n", line);
-		clean_str(str);
-	}
-	printf("string All_string = '%s'\n", line);
-	return (line);
 }
 
 static char	*string_temp(char *line)
@@ -124,10 +91,7 @@ static char	*string_temp(char *line)
 		return (NULL);
 	i = 0;
 	while (line[++n] != '\0')
-	{
-		printf("\ni = %d || line[%d] = '%c'\n", i, n, line[n]);
 		temp_2[i++] = line[n];
-	}	
 	temp_2[i] = '\0';
 	printf("String temp final = '%s'\n", temp_2);
 	return (temp_2);
@@ -164,22 +128,36 @@ char	*get_next_line(int fd)
 {
 	char		*line;
 	static char	*temp = "";
+	ssize_t		read_size;
+	char		*str;
 
 	printf("Começa get_next_line\n"); printf("String temp inicial = '%s'\n", temp);
 	if (fd >= 1000 || fd <= 0 || BUFFER_SIZE <= 0)
 		return (NULL);
 	line = temp;
-	line = all_string(fd, line);
-	if (line[0] == 0)
+	read_size = 1;
+	while (read_size > 0 && check_lines(line))
 	{
-		free(line);
-		return (NULL);
+		str = malloc((BUFFER_SIZE + 1) * sizeof(char));
+		if (!str)
+			return (NULL);
+		read_size = read(fd, str, BUFFER_SIZE);
+		str[BUFFER_SIZE] = '\0';
+		if (read_size == 0)
+		{	if (!str)
+				return (NULL);
+			line = ft_strjoin(str, line);
+			free(str);
+			break ;
+		}
+		line = ft_strjoin(str, line);
+		free(str);
 	}
+	printf("string = '%s'\n", line);
 	temp = string_temp(line);
-	if (BUFFER_SIZE != 1 && !temp)
-		return (NULL);
-	line = line_fix(line, temp);
-	return (line);
+	// if (BUFFER_SIZE != 1 && !temp)
+		// return (NULL);
+	return (line_fix(line, temp));
 }
 
 

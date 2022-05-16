@@ -19,7 +19,7 @@
 #include <stdio.h>
 
 
-#define BUFFER_SIZE 1212
+#define BUFFER_SIZE 5
 
 int	check_lines(char *string)
 {
@@ -56,6 +56,8 @@ char	*ft_strjoin(char *str, char *line)
 	int		n;
 	int		i;
 
+	if (!str || !line)
+		return (NULL);
 	join = malloc((ft_strlen(line) + ft_strlen(str) + 1) * sizeof(char));
 	if (!join)
 		return (NULL);
@@ -124,10 +126,7 @@ static char	*string_temp(char *line)
 		return (NULL);
 	i = 0;
 	while (line[++n] != '\0')
-	{
-		printf("\ni = %d || line[%d] = '%c'\n", i, n, line[n]);
 		temp_2[i++] = line[n];
-	}	
 	temp_2[i] = '\0';
 	printf("String temp final = '%s'\n", temp_2);
 	return (temp_2);

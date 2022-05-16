@@ -86,11 +86,10 @@ char	*line_fix(char *line)
 char	*get_next_line(int fd)
 {
 	char		*line;
-	static char	*temp;
+	static char	*temp = "";
 
 	if (BUFFER_SIZE <= 0  || fd < 0 || fd > 1024)
 		return (NULL);
-	temp = read(fd, temp, BUFFER_SIZE);
 	line = temp;
 	line = all_string(fd, line);
 	if (line[0] == 0)
