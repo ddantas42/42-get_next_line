@@ -43,7 +43,7 @@ void	clean_before_n(char *temp)
 
 int	check_line(char *str)
 {
-	int n;
+	int	n;
 
 	n = -1;
 	while (str[++n])
@@ -54,7 +54,7 @@ int	check_line(char *str)
 			return (0);
 		}
 	}
-	clean_before_n(str);	
+	clean_before_n(str);
 	return (1);
 }
 

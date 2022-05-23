@@ -28,7 +28,7 @@ char	*get_next_line(int fd)
 			read_size = read(fd, temp, BUFFER_SIZE);
 		if (read_size > 0)
 			line = ft_strjoin(line, temp);
-		if(!check_line(temp))
+		if (!check_line(temp))
 			break ;
 	}
 	return (line);
