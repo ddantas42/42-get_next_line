@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.h                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ddantas- <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: ddantas- <ddantas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/17 17:22:19 by ddantas-          #+#    #+#             */
-/*   Updated: 2022/05/17 18:11:31 by ddantas-         ###   ########.fr       */
+/*   Updated: 2022/12/28 11:45:26 by ddantas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,16 +19,14 @@
 # include <stdlib.h>
 # include <fcntl.h>
 # include <stdio.h>
-# ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 42
-# endif
+# define BUFFER_SIZE 1
 
 // Main Functions
 char	*get_next_line(int fd);
 
 // helper Functions
-size_t	ft_strlen(char *s);
+size_t	ft_strlen_2(char *s);
 void	clean_before_n(char *temp);
-char	*ft_strjoin(char *line, char *temp);
+char	*ft_strjoin_2(char *line, char *temp);
 int		check_line(char *str);
 #endif

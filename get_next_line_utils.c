@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ddantas- <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: ddantas- <ddantas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/17 17:17:28 by ddantas-          #+#    #+#             */
-/*   Updated: 2022/05/17 18:11:26 by ddantas-         ###   ########.fr       */
+/*   Updated: 2022/12/28 11:45:23 by ddantas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-size_t	ft_strlen(char *s)
+size_t	ft_strlen_2(char *s)
 {
 	int	n;
 
@@ -58,13 +58,13 @@ int	check_line(char *str)
 	return (1);
 }
 
-char	*ft_strjoin(char *line, char *temp)
+char	*ft_strjoin_2(char *line, char *temp)
 {
 	char	*join;
 	int		n;
 	int		i;
 
-	join = malloc((ft_strlen(line) + ft_strlen(temp) + 1) * sizeof(char));
+	join = malloc((ft_strlen_2(line) + ft_strlen_2(temp) + 1) * sizeof(char));
 	if (!join)
 		return (NULL);
 	n = 0;
